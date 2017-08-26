@@ -1,0 +1,12 @@
+.sql_params_div{
+	border:1px solid #ccc;
+	border-radius:3px;
+	padding:8px;
+	margin:10px 0;
+}
+.sql_params_div .form-control{
+	margin:8px 0;
+}
+.radio label{
+	margin-right:18px;
+}

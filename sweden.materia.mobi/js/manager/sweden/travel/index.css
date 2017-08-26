@@ -1,0 +1,23 @@
+#contentDiv div{
+	margin-bottom: 10px;
+}
+
+.travel-date-point{
+	margin: 0 15px;
+    border: 1px solid #504646;
+    padding: 8px;
+    border-radius: 5px;
+}
+.travel-time-event-input{
+	margin-left: 10px;
+}
+
+.time-detail-line{
+	margin: 5px 0;
+	border: 1px solid #E0E0E0;
+	border-radius: 5px;
+	padding: 8px;
+}
+.time-detail-line>div{
+	margin: 5px 0;
+}
