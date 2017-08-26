@@ -1,0 +1,23 @@
+#cropperImage{
+	max-width: 100%;
+}
+.stragger_div{
+	margin-top:5px;
+}
+.stragger_div:after{
+	display: block;
+	content: " ";
+	clear: both;
+}
+.stragger_date{
+	width:100px;float:left;
+}
+.stragger_time{
+	margin:0 5px;width:80px;float:left;
+	vertical-align: middle;
+}
+.stragger_text{
+	float: left;
+	vertical-align: middle;
+	line-height: 34px;
+}

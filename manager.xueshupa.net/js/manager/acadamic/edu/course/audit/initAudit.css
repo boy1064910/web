@@ -1,0 +1,20 @@
+.tips{
+	height: 28px;
+	line-height: 28px;
+}
+.table-requested tr{
+	cursor: pointer;
+}
+.table-requested tr:hover{
+	background-color: #eee;
+}
+.table-requested tr:first-child{
+	cursor: default;
+}
+.table-requested tr:first-child:hover{
+	background-color: #fff;
+}
+
+.fa-checked-success{
+	color : #d9534f;
+}

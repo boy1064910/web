@@ -1,0 +1,73 @@
+.course-list:after,
+.course-info>div:after{
+	clear: both;
+	display: block;
+	content: " ";
+}
+.course-info{
+	float: left;
+	margin: 15px 8px;
+	border-top: 1px solid #eee;
+	width: 300px;
+	border-radius: 2px;
+}
+.course-info>div{
+	padding: 5px 10px;
+	border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #eee;
+}
+/*.course-info>div:last-child{
+	padding: 0;
+	border-left: 0;
+	border-right: 0;
+}*/
+.course-info-header>span:first-child{
+	float: left;
+	height: 30px;
+	line-height: 30px;
+}
+.course-info-header>span:last-child{
+	float: right;
+	height: 30px;
+	line-height: 30px;
+}
+.course-info-datetime>span,.course-info-datetime>input{
+	float: left;
+}
+.course-info-datetime>span{
+	height: 35px;
+	line-height: 35px;
+	vertical-align: middle;
+}
+.course-info-class-room>select{
+	width: 150px;
+	cursor: pointer;
+}
+.confirm-btn{
+    height: 35px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 35px;
+}
+.confirm-btn-disabled{
+	color: #bbb;
+	background-color: #eee;
+}
+.confirm-btn-enabled{
+	background-color: #428bca;
+    color: #fff;
+}
+.confirm-btn-enabled:hover{
+	color: #fff;
+	background-color: #3071a9;
+	border-color: #3071a9;
+}
+
+#chooseForm table tr{
+	cursor: pointer;
+}
+
+.panel-body>p{
+	margin: 0;
+}

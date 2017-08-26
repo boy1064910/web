@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>学术葩管理平台</title>
+<link rel="shortcut icon" type="image/x-icon" href="/images/login-logo.png">
+<link href="/css/style.css" rel="stylesheet">
+<link href="/css/style-reset.css" rel="stylesheet">
+<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+<!-- jquery confirm -->
+<link href="/widgets/jquery/jquery-confirm/css/jquery-confirm.css" rel="stylesheet">
+<script src="/widgets/jquery/jquery-confirm/js/jquery-confirm.js"></script> 
+<!-- import Ding widget -->
+<link rel="stylesheet" type="text/css" href="/widgets/dingui/themes/default/ding.css" />
+<script src="/widgets/jquery/jquery.md5.js"></script>  
+<!-- jquery common -->
+<script src="/widgets/jquery/jquery-common/jquery.common.js"></script>  
+<!-- jquery validate -->
+<script src="/widgets/jquery/jquery-validation/jquery.validation.js"></script>
+<script src="/widgets/dingui/Ding.js"></script>
+<script src="/js/common.js"></script>
+<script>
+	Ding.ready(function(){
+		
+	});
+    function submitValidation(){
+        var pwd = $.md5($("#pwd").val()).toUpperCase();
+        D("#form").submitParams['pwd'] = pwd;
+        return true;
+    }
+	function success() {
+		var returnUrl = Ding.getQueryParameterByName("returnUrl");
+		if(Ding.isEmpty(returnUrl)){
+			this.location = "/acadamic-web-manager/index.shtml";
+		}
+		else{
+			this.location = Ding.getQueryParameterByName("returnUrl");
+		}
+	}
+</script>
+</head>
+<body class="login-body">
+	<div class="container">
+
+    <form id="form" class="Ding-Form form-signin" action="/xfsw-web-fe-entry/manager/entry/login.shtml" successCallback="success" keyDownValid="true" submitValidation="submitValidation">
+        <div class="form-signin-heading text-center">
+            <h1 class="sign-title">Sign In</h1>
+            <img src="images/login-logo.png" alt=""/>
+        </div>
+        <div class="login-wrap">
+            <input type="text" class="form-control" placeholder="用戶账号" name="account" autofocus>
+            <input type="password" class="form-control" placeholder="用戶密码" id="pwd">
+
+            <a class="ding-submit btn btn-lg btn-login btn-block" type="submit">
+                <i class="fa fa-check"></i>
+            </a>
+            <label class="checkbox" style="padding-left:20px;">
+                <input type="checkbox" value="remember-me" style="float:left;position:relative;margin-right:5px;"> Remember me
+                <span class="pull-right">
+                    <a data-toggle="modal" href="#myModal"> Forgot Password?</a>
+                </span>
+            </label>
+
+        </div>
+
+        <!-- Modal -->
+        <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Forgot Password ?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Enter your e-mail address below to reset your password.</p>
+                        <input type="text" name="email" placeholder="Email" autocomplete="off" class="form-control placeholder-no-fix">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Cancel</button>
+                        <button class="btn btn-primary" type="button">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal -->
+
+    </form>
+
+</div>
+<!-- loading -->
+<script src="/widgets/whir/whir.js"></script>
+</body>
+</html>
