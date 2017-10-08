@@ -1,6 +1,6 @@
 document.domain = "xueshupa.net";
 
-var domainName = "mini.xueshupa.net";
+var domainName = "manager.xueshupa.net";
 var projectName = "/acadamic-web-platform";
 
 
@@ -29,6 +29,7 @@ function commonResultCallback(json){
 
 	}
 	else{
+		console.log(json.code);
 		if(json.code==103){
 			$.alert({
 				title:'学术葩提示',

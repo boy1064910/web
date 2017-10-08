@@ -525,7 +525,9 @@
 	    //当请求为get的时候，拼接参数
 	    if(config.method.toUpperCase()=="GET"){
 	    	if(config.url.indexOf('?')==-1){//不存在?
-	    		config.url+="?"+params;
+	    		if(!Ding.isEmpty(params)){
+	    			config.url+="?"+params;
+	    		}
 	    	}
 	    	else{
 	    		config.url+="&"+params;
