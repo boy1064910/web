@@ -29,48 +29,52 @@ function commonResultCallback(json){
 
 	}
 	else{
-		console.log(json.code);
-		if(json.code==103){
-			$.alert({
-				title:'学术葩提示',
-	            content: '系统服务异常，请稍候重试，如需帮助，请打开公众号【学术葩教育资源平台】在线联系客服或者拨打客服电话',
-	            confirmButton:'确定'
-			})
-		}
-		else if(json.code==101){
-			$.alert({
-				title:'学术葩提示',
-	            content: json.msg,
-	            confirmButton:'确定'
-	        });
-		}
-		else if(json.code==102){
-			$.alert({
-				title:'学术葩提示',
-	            content: '业务服务异常，请稍候重试，如需帮助，请打开公众号【学术葩教育资源平台】在线联系客服或者拨打客服电话',
-	            confirmButton:'确定'
-	        });
-		}
-		else if(json.code==2){
-			$.alert({
-				title:'学术葩提示',
-	            content: '系统调用服务超时，请联系管理员',
-	            confirmButton:'确定'
-	        });
-		}
-		else if(json.code==1001){
-			$.alert({
-				title:'学术葩提示',
-	            content: '登录超时，请重新登录！',
-	            confirmButton:'确定'
-	        });
-		}
-		else{
-			$.alert({
-				title:'学术葩提示',
-	            content: json.msg,
-	            confirmButton:'确定'
-	        });
+		switch(json.code){
+			case 2:{
+				$.alert({
+					title:'学术葩提示',
+		            content: '系统调用服务超时，请联系管理员',
+		            confirmButton:'确定'
+		        });
+				break;
+			}
+			case 101:{
+				break;
+			}
+			case 102:{
+				break;
+			}
+			case 103:{
+				$.alert({
+					title:'学术葩提示',
+		            content: '系统服务异常，请稍候重试，如需帮助，请打开公众号【学术葩教育资源平台】在线联系客服或者拨打客服电话',
+		            confirmButton:'确定'
+				});
+				break;
+			}
+			case 201:{
+				$.alert({
+					title:'学术葩提示',
+		            content: '权限受限,请联系管理员!',
+		            confirmButton:'确定'
+				});
+				break;
+			}
+			case 1001:{
+				$.alert({
+					title:'学术葩提示',
+		            content: '登录超时，请重新登录！',
+		            confirmButton:'确定'
+		        });
+		        break;
+			}
+			default:{
+				$.alert({
+					title:'学术葩提示',
+		            content: json.msg,
+		            confirmButton:'确定'
+		        });
+			}
 		}
 	}
 }

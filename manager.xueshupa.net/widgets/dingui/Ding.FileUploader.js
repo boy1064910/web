@@ -15,7 +15,7 @@ var DingUploaderManager = {
 	'uploaderCache' : {},//此页面所有的uploader对象缓存
 	'loadSign' : function(func){//获取oss签名结果
 		Ding.ajax({
-			'url':projectName+'/manager/data/post/policy/list.shtml',
+			'url':'/xfsw-web-business/business/oss/list.shtml',
 			'successCallback':function(result){//获取oss签名结果成功
 				var data = result.data;
 				DingUploaderManager.uploadParams.OSSAccessKeyId = data.accessid;

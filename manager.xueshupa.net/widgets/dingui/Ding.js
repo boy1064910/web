@@ -737,7 +737,7 @@
 	},
 	Ding.formatDate = function(date, fmt) {
 		if(Ding.isEmpty(fmt)){
-			fmt = "%Y-%M-%d";
+			fmt = "%Y-%M-%d %H:%m";
 		}
 	    function pad(value) {
 	        return (value.toString().length < 2) ? '0' + value : value;
