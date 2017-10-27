@@ -120,6 +120,7 @@ Ding.FileUploader = function(config){
 	// this.successCallback = Ding.isEmpty(config.successCallback) ? null : config.successCallback;//文件上传完成回调函数
 	this.completed = false;
 	this.completeCallback = Ding.isEmpty(config.completeCallback) ? null : config.completeCallback;//全部文件上传完成回调函数
+	this.addedCallback = Ding.isEmpty(config.addedCallback) ? null : config.addedCallback;//全部文件添加完成回调函数
 
 	//Ding上传组件内部定义
 	this.jdom = $("#"+this.id);
@@ -178,31 +179,35 @@ Ding.FileUploader = function(config){
 					}
 					return;
 				}
-				
-				for(var f in files){
-					var jpreviewDiv = $('<div class="preview-div"></div>');
-					var jprocessDiv = $('<div class="progress" id="progress'+files[f].id+'"></div>');
-					var jprocessBar = $('<div class="progress-bar" id="progressBar'+files[f].id+'"></div>');
+				if(!Ding.isEmpty(_this.addedCallback)){
+					_this.addedCallback(up,files,_this.jcontainer);
+				}
+				else{
+					for(var f in files){
+						var jpreviewDiv = $('<div class="preview-div"></div>');
+						var jprocessDiv = $('<div class="progress" id="progress'+files[f].id+'"></div>');
+						var jprocessBar = $('<div class="progress-bar" id="progressBar'+files[f].id+'"></div>');
 
-					jprocessDiv.append(jprocessBar);
-					jpreviewDiv.append(jprocessDiv);
+						jprocessDiv.append(jprocessBar);
+						jpreviewDiv.append(jprocessDiv);
 
-					var jinfoDiv = $('<div class="preview-info-div"></div>');
-					var jinfoPercentSpan = $('<span id="percentSpan'+files[f].id+'">0%</span>');
-					jinfoDiv.append(jinfoPercentSpan).append(files[f].name);
-					jpreviewDiv.append(jinfoDiv);
-					
-					if(_this.needPreview){
-						if(files[f] || !/image\//.test(files[f].type)){//属于图片文件，进行预览展示
-							var jpreivewImgDiv = $('<div class="img-preview-div"></div>');
-							jpreviewDiv.append(jpreivewImgDiv);
-							imgDataSourceCallback(files[f],jpreivewImgDiv,function(imgSrc,jdomer){
-								jdomer.css('background-image','url('+imgSrc+')');//回调渲染预览图片效果
-							});
-						}
+						var jinfoDiv = $('<div class="preview-info-div"></div>');
+						var jinfoPercentSpan = $('<span id="percentSpan'+files[f].id+'">0%</span>');
+						jinfoDiv.append(jinfoPercentSpan).append(files[f].name);
+						jpreviewDiv.append(jinfoDiv);
 						
+						if(_this.needPreview){
+							if(files[f] || !/image\//.test(files[f].type)){//属于图片文件，进行预览展示
+								var jpreivewImgDiv = $('<div class="img-preview-div"></div>');
+								jpreviewDiv.append(jpreivewImgDiv);
+								imgDataSourceCallback(files[f],jpreivewImgDiv,function(imgSrc,jdomer){
+									jdomer.css('background-image','url('+imgSrc+')');//回调渲染预览图片效果
+								});
+							}
+							
+						}
+						_this.jcontainer.append(jpreviewDiv);
 					}
-					_this.jcontainer.append(jpreviewDiv);
 				}
 				up.start();
 			},
@@ -239,7 +244,7 @@ Ding.FileUploader = function(config){
 				}
 				if (err.code == -600) {
 					this.files.splice(toremove, 1);	
-					alert("选择的文件太大了");
+					alert("文件大小不能超过"+_this.maxFileSize);
 				}
 				else if (err.code == -601) {
 					this.files.splice(toremove, 1);	
