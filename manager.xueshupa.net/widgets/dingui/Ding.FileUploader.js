@@ -180,7 +180,7 @@ Ding.FileUploader = function(config){
 					return;
 				}
 				if(!Ding.isEmpty(_this.addedCallback)){
-					_this.addedCallback(up,files,_this.jcontainer);
+					_this.addedCallback(up,files,_this);
 				}
 				else{
 					for(var f in files){
@@ -231,7 +231,7 @@ Ding.FileUploader = function(config){
 			UploadComplete:function(up,files){
 				_this.completed = true;
 				if(!Ding.isEmpty(_this.completeCallback)){
-					_this.completeCallback(up,files);
+					_this.completeCallback(up,files,_this);
 				}
 			},
 			Error: function(up, err) {
