@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+<script>
+	
+	$(document).ready(function(){
+		analystic();
+	});
+
+
+	// window.onload=function(){
+	// 	var canvas=document.getElementById('canvas');
+	// 	canvas.width=1000;
+	// 	canvas.height=1000;
+	// 	var context=canvas.getContext('2d');
+	// 	context.font="bold 20px Arial"
+	// 	context.fillStyle="#058"
+	// 	context.fillText("Hello canvas！",40,100)
+		
+	// 	var ctx = canvas.getContext('2d');
+	// 	ctx.beginPath();
+	// 	ctx.moveTo(125,125);
+	// 	ctx.lineTo(125,45);
+	// 	ctx.lineTo(45,125);
+	// 	ctx.closePath();
+	// 	ctx.stroke();
+		
+	// 	context.beginPath();
+	// 	context.lineWidth=5;
+	// 	context.strokeStyle="red";
+	// 	context.arc(100,100,50,0,1.5*Math.PI);
+	// 	context.stroke();
+		
+	// 	//圆心坐标
+	// 	var circleDot = {
+	// 		'x' : 400,
+	// 		'y' : 400
+	// 	};
+	// 	var r = 100;//半径
+	// 	var lineAngle = {
+	// 		'start' : 1.25*Math.PI,
+	// 		'end' : 1.75*Math.PI
+	// 	}
+	// 	context.beginPath();
+	// 	context.lineWidth=1;
+	// 	context.arc(circleDot.x,circleDot.y,r,lineAngle.start,lineAngle.end,false);
+	// 	context.stroke();
+		
+	// 	var firstDot = {
+	// 		'x' : circleDot.x + r * Math.cos(lineAngle.start),
+	// 		'y' : circleDot.y + r * Math.sin(lineAngle.start)
+	// 	}
+		
+	// 	var secondDot = {
+	// 		'x' : circleDot.x + r * Math.cos(lineAngle.end),
+	// 		'y' : circleDot.y + r * Math.sin(lineAngle.end)
+	// 	}
+		
+	// 	var firstLineDot = {
+	// 		'x':10*Math.cos(345/180*Math.PI)+firstDot.x,
+	// 		'y':10*Math.sin(345/180*Math.PI)+firstDot.y
+	// 	}
+	// 	context.beginPath();
+	// 	context.moveTo(firstDot.x,firstDot.y);
+	// 	context.lineTo(firstLineDot.x,firstLineDot.y);
+	// 	context.stroke();
+		
+	// 	var secondLineDot = {
+	// 		'x':10*Math.cos(285/180*Math.PI)+firstDot.x,
+	// 		'y':10*Math.sin(285/180*Math.PI)+firstDot.y
+	// 	}
+	// 	context.beginPath();
+	// 	context.moveTo(firstDot.x,firstDot.y);
+	// 	context.lineTo(secondLineDot.x,secondLineDot.y);
+	// 	context.stroke();
+		
+	// }
+
+	function analystic(){
+		var info = $("#info").val();
+		if(info==''){
+			info = '习近平出席中国共产党与世界政党高层对话会开幕式并发表主旨讲话';
+		}
+		$.ajax({
+			'url':'/ltp-analystic/analystic/parse',
+			'data':{
+				'info':info
+			},
+			'success':function(result){
+
+				if(result.data==null){
+					alert("解析失败,"+result.msg);
+					return;
+				}
+				var data = result.data;
+				var words = data.words;
+				var postags = data.postags;
+				var heads = data.heads;
+				var deprels = data.deprels;
+				console.log(heads);
+
+				var canvas=document.getElementById('canvas');
+				canvas.height=300;
+				canvas.width =(words.length+2)*60;
+				var context=canvas.getContext('2d');
+
+
+
+				$("#exprDiv").empty();
+				$("#exprDiv").append('<tr><th>词组</th><th>词性关系</th></tr>');
+				for(var i=0;i<words.length;i++){
+					var dot = {
+						'x' : (i+1)*60,
+						'y' : 200
+					}
+					context.fillStyle="#000";
+					context.font="14px Arial";
+					context.fillText(words[i],dot.x,dot.y);
+					context.fillText(postags[i],(i+1)*60,240);
+
+					var r = (parseInt(heads[i])-(i+1))*60;
+
+					//计算圆心坐标
+					var circleDot = {
+						'x' : dot.x + r/2 + 5,
+						'y': dot.y + Math.sqrt(r*r-r/2*r/2) - 15
+					}
+					var lineAngle = {
+						'start' : 240/180*Math.PI,
+						'end' : 300/180*Math.PI
+					}
+					context.beginPath();
+					context.lineWidth=1;
+					context.arc(circleDot.x,circleDot.y,Math.abs(r),lineAngle.start,lineAngle.end,false);
+					context.stroke();
+
+					//词性坐标位置
+					var expr = {
+						'x' : circleDot.x - 8,
+						'y' : circleDot.y - Math.abs(r) + 5
+					}
+					context.fillStyle="red";
+					context.font="12px Arial";
+					context.fillText(deprels[i],expr.x,expr.y);
+
+					var arrowAngle = {
+						'a1' : 355,
+						'a2' : 305
+					}
+					if(r<0){
+						arrowAngle = {
+							'a1' : 240,
+							'a2' : 190
+						}
+					}
+					var arrowDot = {
+						'x' : dot.x + 5,
+						'y' : circleDot.y - Math.sqrt(r*r-r/2*r/2)
+					}
+					var firstLineDot = {
+						'x':10*Math.cos(arrowAngle.a1/180*Math.PI)+arrowDot.x,
+						'y':10*Math.sin(arrowAngle.a1/180*Math.PI)+arrowDot.y
+					}
+					context.beginPath();
+					context.moveTo(arrowDot.x,arrowDot.y);
+					context.lineTo(firstLineDot.x,firstLineDot.y);
+					context.stroke();
+						
+					var secondLineDot = {
+						'x':10*Math.cos(arrowAngle.a2/180*Math.PI)+arrowDot.x,
+						'y':10*Math.sin(arrowAngle.a2/180*Math.PI)+arrowDot.y
+					}
+					context.beginPath();
+					context.moveTo(arrowDot.x,arrowDot.y);
+					context.lineTo(secondLineDot.x,secondLineDot.y);
+					context.stroke();
+
+					var tr = $('<tr></tr>');
+					$("#exprDiv").append(tr);
+					var astr = heads[i]-1>0 ? words[heads[i]-1] : 'Root';
+					var str = r>0 ? words[i] + "<--" + astr : words[i] + "-->" + astr;
+					tr.append('<td>'+str+'</td><td>'+deprels[i]+'</td>');
+				}
+
+				$("#relationDiv").empty();
+				$("#relationDiv").append("<div>三元关系组：</div>");
+				var relations = data.relations;
+				for(var i=0;i<relations.length;i++){
+					$("#relationDiv").append("<div>"+relations[i]+"</div>");
+				}
+			}
+		})
+	}
+</script>
+<style type="text/css">
+table{
+	margin-left: 80px;
+	margin-top: 10px;
+}
+table th,
+table td{
+	text-align: center;
+	border: 1px solid #ccc;
+	width: 200px;
+}
+</style>
+</head>
+<body>
+	<div style="margin-top: 20px;">
+		<textarea id="info" style="width: 800px;height: 100px;border: 1px solid #ccc;border-radius: 3px;" placeholder="样式文本：习近平出席中国共产党与世界政党高层对话会开幕式并发表主旨讲话"></textarea>
+	</div>
+	<div style="margin-top: 8px;">
+		<button type="button" onclick="analystic()">开始分析</button>
+	</div>
+	<div style="margin-top: 20px;width: 800px;overflow: auto;border: 1px dashed #ccc;border-radius: 3px;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<div id="relationDiv"></div>
+	<table id="exprDiv">
+		<tr>
+			<th>词组</th>
+			<th>词性关系</th>
+		</tr>
+	</table>
+
+
+<div class="section" id="id3">
+<h2>词性标注</h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%">
+<col width="28%">
+<col width="16%">
+<col width="7%">
+<col width="26%">
+<col width="16%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Tag</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+<th class="head">Tag</th>
+<th class="head">Description</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>a</td>
+<td>adjective</td>
+<td>美丽</td>
+<td>ni</td>
+<td>organization name</td>
+<td>保险公司</td>
+</tr>
+<tr class="row-odd"><td>b</td>
+<td>other noun-modifier</td>
+<td>大型, 西式</td>
+<td>nl</td>
+<td>location noun</td>
+<td>城郊</td>
+</tr>
+<tr class="row-even"><td>c</td>
+<td>conjunction</td>
+<td>和, 虽然</td>
+<td>ns</td>
+<td>geographical name</td>
+<td>北京</td>
+</tr>
+<tr class="row-odd"><td>d</td>
+<td>adverb</td>
+<td>很</td>
+<td>nt</td>
+<td>temporal noun</td>
+<td>近日, 明代</td>
+</tr>
+<tr class="row-even"><td>e</td>
+<td>exclamation</td>
+<td>哎</td>
+<td>nz</td>
+<td>other proper noun</td>
+<td>诺贝尔奖</td>
+</tr>
+<tr class="row-odd"><td>g</td>
+<td>morpheme</td>
+<td>茨, 甥</td>
+<td>o</td>
+<td>onomatopoeia</td>
+<td>哗啦</td>
+</tr>
+<tr class="row-even"><td>h</td>
+<td>prefix</td>
+<td>阿, 伪</td>
+<td>p</td>
+<td>preposition</td>
+<td>在, 把</td>
+</tr>
+<tr class="row-odd"><td>i</td>
+<td>idiom</td>
+<td>百花齐放</td>
+<td>q</td>
+<td>quantity</td>
+<td>个</td>
+</tr>
+<tr class="row-even"><td>j</td>
+<td>abbreviation</td>
+<td>公检法</td>
+<td>r</td>
+<td>pronoun</td>
+<td>我们</td>
+</tr>
+<tr class="row-odd"><td>k</td>
+<td>suffix</td>
+<td>界, 率</td>
+<td>u</td>
+<td>auxiliary</td>
+<td>的, 地</td>
+</tr>
+<tr class="row-even"><td>m</td>
+<td>number</td>
+<td>一, 第一</td>
+<td>v</td>
+<td>verb</td>
+<td>跑, 学习</td>
+</tr>
+<tr class="row-odd"><td>n</td>
+<td>general noun</td>
+<td>苹果</td>
+<td>wp</td>
+<td>punctuation</td>
+<td>，。！</td>
+</tr>
+<tr class="row-even"><td>nd</td>
+<td>direction noun</td>
+<td>右侧</td>
+<td>ws</td>
+<td>foreign words</td>
+<td>CPU</td>
+</tr>
+<tr class="row-odd"><td>nh</td>
+<td>person name</td>
+<td>杜甫, 汤姆</td>
+<td>x</td>
+<td>non-lexeme</td>
+<td>萄, 翱</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="section" id="id5"> 
+<h2>依存关系</h2> 
+<table border="1" class="docutils"> 
+<colgroup> 
+<col width="16%" /> 
+<col width="7%" /> 
+<col width="38%" /> 
+<col width="38%" /> 
+</colgroup> 
+<thead valign="bottom"> 
+<tr class="row-odd"> 
+<th class="head">关系类型</th> 
+<th class="head">Tag</th> 
+<th class="head">Description</th> 
+<th class="head">Example</th> 
+</tr> 
+</thead> 
+<tbody valign="top"> 
+<tr class="row-even"> 
+<td>主谓关系</td> 
+<td>SBV</td> 
+<td>subject-verb</td> 
+<td>我送她一束花 (我 &lt;– 送)</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>动宾关系</td> 
+<td>VOB</td> 
+<td>直接宾语，verb-object</td> 
+<td>我送她一束花 (送 –&gt; 花)</td> 
+</tr> 
+<tr class="row-even"> 
+<td>间宾关系</td> 
+<td>IOB</td> 
+<td>间接宾语，indirect-object</td> 
+<td>我送她一束花 (送 –&gt; 她)</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>前置宾语</td> 
+<td>FOB</td> 
+<td>前置宾语，fronting-object</td> 
+<td>他什么书都读 (书 &lt;– 读)</td> 
+</tr> 
+<tr class="row-even"> 
+<td>兼语</td> 
+<td>DBL</td> 
+<td>double</td> 
+<td>他请我吃饭 (请 –&gt; 我)</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>定中关系</td> 
+<td>ATT</td> 
+<td>attribute</td> 
+<td>红苹果 (红 &lt;– 苹果)</td> 
+</tr> 
+<tr class="row-even"> 
+<td>状中结构</td> 
+<td>ADV</td> 
+<td>adverbial</td> 
+<td>非常美丽 (非常 &lt;– 美丽)</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>动补结构</td> 
+<td>CMP</td> 
+<td>complement</td> 
+<td>做完了作业 (做 –&gt; 完)</td> 
+</tr> 
+<tr class="row-even"> 
+<td>并列关系</td> 
+<td>COO</td> 
+<td>coordinate</td> 
+<td>大山和大海 (大山 –&gt; 大海)</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>介宾关系</td> 
+<td>POB</td> 
+<td>preposition-object</td> 
+<td>在贸易区内 (在 –&gt; 内)</td> 
+</tr> 
+<tr class="row-even"> 
+<td>左附加关系</td> 
+<td>LAD</td> 
+<td>left adjunct</td> 
+<td>大山和大海 (和 &lt;– 大海)</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>右附加关系</td> 
+<td>RAD</td> 
+<td>right adjunct</td> 
+<td>孩子们 (孩子 –&gt; 们)</td> 
+</tr> 
+<tr class="row-even"> 
+<td>独立结构</td> 
+<td>IS</td> 
+<td>independent structure</td> 
+<td>两个单句在结构上彼此独立</td> 
+</tr> 
+<tr class="row-odd"> 
+<td>核心关系</td> 
+<td>HED</td> 
+<td>head</td> 
+<td>指整个句子的核心</td> 
+</tr> 
+</tbody> 
+</table> 
+</div>  
+</body>
+</html>
