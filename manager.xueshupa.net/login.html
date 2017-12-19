@@ -14,8 +14,9 @@
 <!-- import Ding widget -->
 <link rel="stylesheet" type="text/css" href="/widgets/dingui/themes/default/ding.css" />
 <script src="/widgets/jquery/jquery.md5.js"></script>  
+<script src="/widgets/jquery/jquery.cookie.js"></script> 
 <!-- jquery common -->
-<script src="/widgets/jquery/jquery-common/jquery.common.js"></script>  
+<script src="/widgets/jquery/jquery-common/jquery.common.js"></script> 
 <!-- jquery validate -->
 <script src="/widgets/jquery/jquery-validation/jquery.validation.js"></script>
 <script src="/widgets/dingui/Ding.js"></script>
@@ -29,7 +30,13 @@
         D("#form").submitParams['pwd'] = pwd;
         return true;
     }
-	function success() {
+	function success(res) {
+        var data = res.data;
+        $.cookie('xfsw-session',data.sessionId,{
+            expires:1,  
+            path:'/',
+            domain:'xueshupa.net'
+        })
 		var returnUrl = Ding.getQueryParameterByName("returnUrl");
 		if(Ding.isEmpty(returnUrl)){
 			this.location = "/acadamic-web-manager/index.shtml";
