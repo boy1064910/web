@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="shortcut icon" type="image/x-icon" href="/images/login-logo.png">
+<link href="/css/style.css" rel="stylesheet">
+<link href="/css/style-reset.css" rel="stylesheet">
+<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+<!-- jquery confirm -->
+<link href="/widgets/jquery/jquery-confirm/css/jquery-confirm.css" rel="stylesheet">
+<script src="/widgets/jquery/jquery-confirm/js/jquery-confirm.js"></script> 
+<!-- import Ding widget -->
+<link rel="stylesheet" type="text/css" href="/widgets/dingui/themes/default/ding.css" />
+<script src="/widgets/jquery/jquery.md5.js"></script>  
+<!-- jquery common -->
+<script src="/widgets/jquery/jquery-common/jquery.common.js"></script>  
+<!-- jquery validate -->
+<script src="/widgets/jquery/jquery-validation/jquery.validation.js"></script>
+<script src="/widgets/dingui/Ding.js"></script>
+<script src="/js/common.js"></script>
+<script>
+	Ding.ready(function(){
+		Ding.ajax({
+			'url':'http://sv3.datadeck.com/mobile/v3/users/login',
+			'method':'POST',
+			'successCallback':function(result){
+				console.log(result);
+			}
+		});
+	});
+</script>
+</head>
+<body class="login-body">
+
+</body>
+</html>

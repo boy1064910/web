@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+<script>
+	window.onload=function(){
+		var canvas=document.getElementById('canvas');
+		canvas.width=1000;
+		canvas.height=1000;
+		var context=canvas.getContext('2d');
+		context.font="bold 20px Arial"
+		context.fillStyle="#058"
+		context.fillText("Hello canvas！",40,100)
+		
+		var ctx = canvas.getContext('2d');
+		ctx.beginPath();
+		ctx.moveTo(125,125);
+		ctx.lineTo(125,45);
+		ctx.lineTo(45,125);
+		ctx.closePath();
+		ctx.stroke();
+		
+		context.beginPath();
+		context.lineWidth=5;
+		context.strokeStyle="red";
+		context.arc(100,100,50,0,1.5*Math.PI);
+		context.stroke();
+		
+		//圆心坐标
+		var circleDot = {
+			'x' : 400,
+			'y' : 400
+		};
+		var r = 100;//半径
+		var lineAngle = {
+			'start' : 1.25*Math.PI,
+			'end' : 1.75*Math.PI
+		}
+		context.beginPath();
+		context.lineWidth=1;
+		context.arc(circleDot.x,circleDot.y,r,lineAngle.start,lineAngle.end,false);
+		context.stroke();
+		
+		var firstDot = {
+			'x' : circleDot.x + r * Math.cos(lineAngle.start),
+			'y' : circleDot.y + r * Math.sin(lineAngle.start)
+		}
+		
+		var secondDot = {
+			'x' : circleDot.x + r * Math.cos(lineAngle.end),
+			'y' : circleDot.y + r * Math.sin(lineAngle.end)
+		}
+		
+		var firstLineDot = {
+			'x':10*Math.cos(345/180*Math.PI)+firstDot.x,
+			'y':10*Math.sin(345/180*Math.PI)+firstDot.y
+		}
+		context.beginPath();
+		context.moveTo(firstDot.x,firstDot.y);
+		context.lineTo(firstLineDot.x,firstLineDot.y);
+		context.stroke();
+		
+		var secondLineDot = {
+			'x':10*Math.cos(285/180*Math.PI)+firstDot.x,
+			'y':10*Math.sin(285/180*Math.PI)+firstDot.y
+		}
+		context.beginPath();
+		context.moveTo(firstDot.x,firstDot.y);
+		context.lineTo(secondLineDot.x,secondLineDot.y);
+		context.stroke();
+		
+	}
+</script>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+</body>
+</html>
