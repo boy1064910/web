@@ -303,7 +303,9 @@
         cache: true,
         contentType: 'application/json',
         dataType: 'json',
-        ajaxOptions: {},
+        ajaxOptions: {
+            headers: {"xfsw-session": Ding.getCookie("xfsw-session")}
+        },
         queryParams: function (params) {
             return params;
         },
