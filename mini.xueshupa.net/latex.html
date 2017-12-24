@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+		<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/x-mathjax-config">
+			$.ajax({
+				'url':'/acadamic-web-api/course/chapter/knowledge/info.shtml',
+				'success':function(res){
+					
+					$("#info").html(res.data);
+					setTimeout(function(){
+					console.log("sdsds");
+						MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+					},3000);
+				}
+			})
+		</script>
+	</head>
+	<body>
+		<div id="info">
+		</div>
+	</body>
+</html>
