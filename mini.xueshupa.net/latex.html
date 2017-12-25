@@ -1,20 +1,38 @@
 <html>
 	<head>
+		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 		<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
-		<script type="text/x-mathjax-config">
+		<script src="/widgets/dingui/Ding.js"></script>
+		<script>
+		MathJax.Hub.config.extensions.push("/widget/mathjax/forminput.js");
+		Ding.ready(function(){
+			var sessionId = Ding.getQueryParameterByName("sessionId");
+			var knowledgeId = Ding.getQueryParameterByName("knowledgeId");
 			$.ajax({
 				'url':'/acadamic-web-api/course/chapter/knowledge/info.shtml',
+				'headers':{
+					'xfsw-session':sessionId
+				},
+				'data':{
+					'knowledgeId':knowledgeId
+				},
 				'success':function(res){
-					
-					$("#info").html(res.data);
-					setTimeout(function(){
-					console.log("sdsds");
-						MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-					},3000);
+					console.log(res);
+					var data = res.data;
+					var knowledgePointList = data.knowledgePointList;
+
+					var knowledgePoint = knowledgePointList[0];
+					var content = knowledgePoint.contentList[0].content;
+					$("#info").html(content);
+					// setTimeout(function(){
+					// console.log("sdsds");
+					// 	MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+					// },3000);
 				}
 			})
+		});
 		</script>
 	</head>
 	<body>

@@ -539,7 +539,6 @@
 	    //2.连接服务器  
 	    oAjax.open(config.method, config.url, config.async);   //open(方法, url, 是否异步)
 	    oAjax.setRequestHeader("X-Requested-With","XMLHttpRequest");
-	    console.log(Ding.getCookie("xfsw-session"));
 	    oAjax.setRequestHeader("xfsw-session",Ding.getCookie("xfsw-session"));
 	    if(config.method.toUpperCase()=="POST")
 	    	oAjax.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
