@@ -31,4 +31,4 @@ MathJax.Callback.Queue(
   
 }));
 
-// MathJax.Ajax.loadComplete("http://mini.xueshupa.net/widgets/mathjax/forminput.js");
+MathJax.Ajax.loadComplete("/forminput.js");

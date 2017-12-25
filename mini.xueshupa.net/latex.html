@@ -5,8 +5,19 @@
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 		<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
 		<script src="/widgets/dingui/Ding.js"></script>
+		
+		 <script type="text/x-mathjax-config">
+	       MathJax.Hub.Config({
+			  TeX: {
+			    extensions: ["/forminput.js"]
+			  }
+			});
+	    </script>
+
 		<script>
-		MathJax.Hub.config.extensions.push("/widget/mathjax/forminput.js");
+
+		
+		
 		Ding.ready(function(){
 			var sessionId = Ding.getQueryParameterByName("sessionId");
 			var knowledgeId = Ding.getQueryParameterByName("knowledgeId");
@@ -23,17 +34,38 @@
 					var data = res.data;
 					var knowledgePointList = data.knowledgePointList;
 
-					var knowledgePoint = knowledgePointList[0];
-					var content = knowledgePoint.contentList[0].content;
-					$("#info").html(content);
-					// setTimeout(function(){
-					// console.log("sdsds");
-					// 	MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-					// },3000);
+					// var knowledgePoint = knowledgePointList[0];
+					// var content = knowledgePoint.contentList[0].content;
+					// $("#info").html(content);
+					// var info = "";
+
+					for(var i=0;i<knowledgePointList.length;i++){
+						var contentList = knowledgePointList[i].contentList;
+						if(Ding.isEmpty(contentList)){
+							continue;
+						}
+						for(var j=0;j<contentList.length;j++){
+							var content = contentList[j];
+							switch(content.type){
+								case "EXPLORE":{
+									$("#info").append(content.content);
+									break;
+								}
+								case "GAME":{
+									var questionList = contentList[j].questionList;
+									for(var k=0;k<questionList.length;k++){
+										$("#info").append(questionList[k].content);
+									}
+									break;
+								}
+							}
+						}
+					}
 				}
 			})
 		});
 		</script>
+		
 	</head>
 	<body>
 		<div id="info">
