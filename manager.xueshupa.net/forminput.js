@@ -22,7 +22,7 @@ MathJax.Callback.Queue(
       if (val == null) {val = ""}
       cls = ("MathJax_Input "+(cls||"")).replace(/ +$/,"");
       var input = HTML.Element("input",{type:"text", name:id, id:id, size:size, className:cls, value:val});
-      input.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
+      // input.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
       var mml = MML["annotation-xml"](MML.xml(input)).With({encoding:"application/xhtml+xml",isToken:true});
       this.Push(MML.semantics(mml));
     }
