@@ -5,19 +5,44 @@
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
 		<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
 		<script src="/widgets/dingui/Ding.js"></script>
-		
+		<link href="/widgets/mathjax/style.css" rel="stylesheet">
 		 <script type="text/x-mathjax-config">
-	       MathJax.Hub.Config({
+		 	MathJax.Hub.Config({
+			  "fast-preview": {
+			    Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
+			    color: "inherit!important",
+			    updateTime: 30, updateDelay: 0,
+			    messageStyle: "none",
+			    disabled: false
+			  },
 			  TeX: {
-			    extensions: ["/forminput.js"]
+			    extensions: ["/widgets/mathjax/forminput.js"]
 			  }
+			});
+			MathJax.Hub.Register.StartupHook("End", function () {
+			  //绑定题目填空事件
+			  inputBindEvent();
 			});
 	    </script>
 
 		<script>
 
+		function inputBindEvent(){
+			var questionList = $("#knowledge-point-list").find('input[type="text"]');
+			for(var i=0;i<questionList.length;i++){
+				$(questionList[i]).on("blur",checkAnswer);
+			}
+		}
+
+		function checkAnswer(){
+			console.log("checkAnswer");
+		}
 		
-		
+		var nextContentDiv = '<div class="next_content" onclick="nextContent(this)">继续</div>';
+
+		//content答案map
+		var contentAnswerMap = {};
+
 		Ding.ready(function(){
 			var sessionId = Ding.getQueryParameterByName("sessionId");
 			var knowledgeId = Ding.getQueryParameterByName("knowledgeId");
@@ -44,31 +69,63 @@
 						if(Ding.isEmpty(contentList)){
 							continue;
 						}
+
+						var pointDiv = $('<div class="knowledge_point"></div>');
+						
 						for(var j=0;j<contentList.length;j++){
+							var contentDiv = $('<div class="knowledge_point_content"></div>');
 							var content = contentList[j];
 							switch(content.type){
 								case "EXPLORE":{
-									$("#info").append(content.content);
+
+									//读取content中的答案列表
+									console.log(content.contentAnswerList)
+									if(!Ding.isEmpty(content.contentAnswerList)){
+										var answer = content.contentAnswerList[i];
+										contentAnswerMap[answer.knowledgePointContentId+"-"+answer.code] = answer.rightAnswer;
+									}
+
 									break;
 								}
 								case "GAME":{
 									var questionList = contentList[j].questionList;
 									for(var k=0;k<questionList.length;k++){
-										$("#info").append(questionList[k].content);
+										var questionDiv = $('<div class="knowledge_point_question"></div>');
+										questionDiv.append(questionList[k].content);
+										contentDiv.append(questionDiv);
 									}
 									break;
 								}
 							}
+							
+							pointDiv.append(contentDiv);
 						}
+
+						$("#knowledge-point-list").append(pointDiv);
 					}
+
+					$($("#knowledge-point-list>.knowledge_point:first")).show();
+					$($("#knowledge-point-list>.knowledge_point:first>.knowledge_point_content:first")).show();
+
+					console.log(contentAnswerMap);
 				}
 			})
 		});
+
+		function nextContent(content){
+			var currentContent = $(content).parent();
+			currentContent.hide();
+			currentContent.next().show();
+
+			if(currentContent.next().children(".knowledge_point_question").length!=0){
+				currentContent.next().children(".knowledge_point_question:first").show();
+			}			
+		}
 		</script>
 		
 	</head>
 	<body>
-		<div id="info">
+		<div id="knowledge-point-list">
 		</div>
 	</body>
 </html>

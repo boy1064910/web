@@ -14,7 +14,6 @@ MathJax.Callback.Queue(
     //  Implements \FormInput[size][class]{name}
     //
     FormInput: function (name) {
-      console.log(name);
       var size = this.GetBrackets(name),
           cls = this.GetBrackets(name),
           val = this.GetBrackets(name),
@@ -31,4 +30,4 @@ MathJax.Callback.Queue(
   
 }));
 
-// MathJax.Ajax.loadComplete("http://mini.xueshupa.net/widgets/mathjax/forminput.js");
+MathJax.Ajax.loadComplete("/widgets/mathjax/forminput.js");

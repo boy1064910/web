@@ -1,0 +1,53 @@
+input[type="text"]{
+	border: 1px solid #000;
+}
+input:focus{
+	-webkit-box-shadow: none;/*点击input 外阴影*/
+    -moz-box-shadow:none;
+    box-shadow:none;
+    outline:0;/*去掉默认谷歌点击input边框显示蓝色  */;
+}
+p{
+	margin: 0;
+}
+table{
+	border-collapse:collapse;border-spacing:0;
+	margin: 0 auto;
+	text-align: center;
+	font-size: 0.75rem;
+}
+table td,table th{
+	padding: 0.25rem;
+}
+table,table td,table th{
+	border-right: 1px solid #000;
+	border-bottom: : 1px solid #000;
+}
+
+#knowledge-point-list{
+	font-size: 0.75rem;
+}
+.knowledge_point{
+	display: none;
+}
+.knowledge_point_content{
+	display: none;
+	bottom: 1.875rem;
+	position: relative;
+}
+.knowledge_point_question{
+	display: none;
+}
+
+.next_content{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	height: 1.875rem;
+	line-height: 1.875rem;
+	width: 100%;
+	color: #fff;
+	text-align: center;
+	background-color: #09BB07;
+	font-size: 0.875rem;
+}
