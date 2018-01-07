@@ -27,18 +27,57 @@
 
 		<script>
 
+		//初始化绑定问题文本框答题事件
 		function inputBindEvent(){
 			var questionList = $("#knowledge-point-list").find('input[type="text"]');
 			for(var i=0;i<questionList.length;i++){
-				$(questionList[i]).on("blur",checkAnswer);
+				if(Ding.isEmpty($(questionList[i]).parents('.knowledge_point_question')[0])){
+					$(questionList[i]).on("blur",checkPointAnswer);
+				}
+				else{
+					$(questionList[i]).on("blur",checkQuestionAnswer);
+				}
 			}
 		}
 
-		function checkAnswer(){
-			console.log("checkAnswer");
+		//知识块问题的答案校验
+		function checkPointAnswer(){
+			console.log("checkPointAnswer");
+		}
+
+		//练习题问题的答案校验
+		function checkQuestionAnswer(){
+			var questionDiv = $(this).parents('.knowledge_point_question');
+			var inputList = questionDiv.find('input[type="text"]');
+			var result = true;//是否显示答题结果，true:显示，false:不显示
+			for(var i0;i<inputList.length;i++){
+				if(Ding.isEmpty($(inputList[i]).val())){
+					result = false;
+					break;
+				}
+			}
+
+			if(result){
+				//已全部填写完毕，开始校验答案
+				for(var i=0;i<inputList.length;i++){
+					var contentid = $(inputList[i]).attr("contentid");
+					var code = $(inputList[i]).attr("name");
+					var val = $.trim($(inputList[i]).val());
+					var rightAnswer = contentAnswerMap[contentid+"-"+code];
+					if(rightAnswer==val){
+						$(inputList[i]).css('border','solid 1px green');
+					}
+					else{
+						$(inputList[i]).css('border','solid 1px red');	
+					}
+				}
+				questionDiv.append(nextQuestionDiv);
+			}
 		}
 		
 		var nextContentDiv = '<div class="next_content" onclick="nextContent(this)">继续</div>';
+		var nextQuestionDiv = '<div class="next_content" onclick="nextQuestion(this)">下一题</div>';
+
 
 		//content答案map
 		var contentAnswerMap = {};
@@ -55,14 +94,9 @@
 					'knowledgeId':knowledgeId
 				},
 				'success':function(res){
-					console.log(res);
 					var data = res.data;
+					console.log(data);
 					var knowledgePointList = data.knowledgePointList;
-
-					// var knowledgePoint = knowledgePointList[0];
-					// var content = knowledgePoint.contentList[0].content;
-					// $("#info").html(content);
-					// var info = "";
 
 					for(var i=0;i<knowledgePointList.length;i++){
 						var contentList = knowledgePointList[i].contentList;
@@ -77,14 +111,14 @@
 							var content = contentList[j];
 							switch(content.type){
 								case "EXPLORE":{
+									contentDiv.append(content.content);
+									contentDiv.append(nextContentDiv);
 
-									//读取content中的答案列表
-									console.log(content.contentAnswerList)
+									//整理答案进入答案集合
 									if(!Ding.isEmpty(content.contentAnswerList)){
 										var answer = content.contentAnswerList[i];
 										contentAnswerMap[answer.knowledgePointContentId+"-"+answer.code] = answer.rightAnswer;
 									}
-
 									break;
 								}
 								case "GAME":{
@@ -93,12 +127,22 @@
 										var questionDiv = $('<div class="knowledge_point_question"></div>');
 										questionDiv.append(questionList[k].content);
 										contentDiv.append(questionDiv);
+
+										//整理答案进入答案集合
+										if(!Ding.isEmpty(questionList[k].answerList)){
+											for(var m=0;m<questionList[k].answerList.length;m++){
+												var answer = questionList[k].answerList[m];
+												contentAnswerMap[questionList[k].knowledgePointContentId+"-"+answer.code] = answer.rightAnswer;
+											}
+										}
 									}
 									break;
 								}
 							}
 							
 							pointDiv.append(contentDiv);
+
+							
 						}
 
 						$("#knowledge-point-list").append(pointDiv);
@@ -120,6 +164,12 @@
 			if(currentContent.next().children(".knowledge_point_question").length!=0){
 				currentContent.next().children(".knowledge_point_question:first").show();
 			}			
+		}
+
+		function nextQuestion(question){
+			var currentQuestion = $(question).parents('.knowledge_point_question');
+			currentQuestion.hide();
+			currentQuestion.next().show();
 		}
 		</script>
 		

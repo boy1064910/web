@@ -11,18 +11,23 @@ MathJax.Callback.Queue(
 
   TEX.Parse.Augment({
     //
+    //  Implements \FormInput[knowledgePointContentId]{code}
     //  Implements \FormInput[size][class]{name}
     //
     FormInput: function (name) {
-      var size = this.GetBrackets(name),
-          cls = this.GetBrackets(name),
-          val = this.GetBrackets(name),
-          id = this.GetArgument(name);
-      if (size == null || size === "") {size = "2"}
-      if (val == null) {val = ""}
-      cls = ("MathJax_Input "+(cls||"")).replace(/ +$/,"");
-      var input = HTML.Element("input",{type:"text", name:id, id:id, size:size, className:cls, value:val});
-      input.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
+      var contentid = this.GetBrackets(name),
+          name = this.GetArgument(name);
+      // var size = this.GetBrackets(name),
+      //     cls = this.GetBrackets(name),
+      //     val = this.GetBrackets(name),
+      //     id = this.GetArgument(name);
+      // if (size == null || size === "") {size = "2"}
+      // if (val == null) {val = ""}
+      // cls = ("MathJax_Input "+(cls||"")).replace(/ +$/,"");
+      var input = HTML.Element("input",{type:"text", name:name});
+      input.setAttribute("size","2");
+      input.setAttribute("contentid",contentid);
+      // input.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
       var mml = MML["annotation-xml"](MML.xml(input)).With({encoding:"application/xhtml+xml",isToken:true});
       this.Push(MML.semantics(mml));
     }

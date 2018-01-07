@@ -2,10 +2,10 @@ input[type="text"]{
 	border: 1px solid #000;
 }
 input:focus{
-	-webkit-box-shadow: none;/*点击input 外阴影*/
-    -moz-box-shadow:none;
-    box-shadow:none;
-    outline:0;/*去掉默认谷歌点击input边框显示蓝色  */;
+	border:#35a5e5 1px solid;
+	box-shadow: 0 0 5px #35a5e5;
+	-webkit-box-shadow: 0 0 5px #35a5e5;
+	-moz-box-shadow: 0 0 5px #35a5e5;
 }
 p{
 	margin: 0;
