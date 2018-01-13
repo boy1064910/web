@@ -15,15 +15,9 @@ MathJax.Callback.Queue(
     //  Implements \FormInput[size][class]{name}
     //
     FormInput: function (name) {
+      console.log(this);
       var contentid = this.GetBrackets(name),
           name = this.GetArgument(name);
-      // var size = this.GetBrackets(name),
-      //     cls = this.GetBrackets(name),
-      //     val = this.GetBrackets(name),
-      //     id = this.GetArgument(name);
-      // if (size == null || size === "") {size = "2"}
-      // if (val == null) {val = ""}
-      // cls = ("MathJax_Input "+(cls||"")).replace(/ +$/,"");
       var input = HTML.Element("input",{type:"text", name:name});
       input.setAttribute("size","2");
       input.setAttribute("contentid",contentid);
