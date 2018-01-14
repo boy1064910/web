@@ -4,6 +4,7 @@ var contentAnswerMap = {};
 //初始化绑定问题文本框答题事件
 function inputBindEvent() {
     var questionList = $("#knowledge-point-list").find('input[type="text"]');
+    console.log(questionList);
     for (var i = 0; i < questionList.length; i++) {
         if (Ding.isEmpty($(questionList[i]).parents('.knowledge_point_question')[0])) {
             $(questionList[i]).on("blur", checkPointAnswer);
@@ -160,6 +161,8 @@ Ding.ready(function() {
             $($("#knowledge-point-list>.knowledge_point:first>.knowledge_point_content:first")).show();
 
             console.log(contentAnswerMap);
+
+            MathJax.Hub.Configured();
         }
     })
 });
