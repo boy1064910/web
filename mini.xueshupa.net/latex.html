@@ -1,181 +1,44 @@
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
-		<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
-		<script src="/widgets/dingui/Ding.js"></script>
-		<link href="/widgets/mathjax/style.css" rel="stylesheet">
-		 <script type="text/x-mathjax-config">
-		 	MathJax.Hub.Config({
-			  "fast-preview": {
-			    Chunks: {EqnChunk: 10000, EqnChunkFactor: 1, EqnChunkDelay: 0},
-			    color: "inherit!important",
-			    updateTime: 30, updateDelay: 0,
-			    messageStyle: "none",
-			    disabled: false
-			  },
-			  TeX: {
-			    extensions: ["/widgets/mathjax/forminput.js"]
-			  }
-			});
-			MathJax.Hub.Register.StartupHook("End", function () {
-			  //绑定题目填空事件
-			  inputBindEvent();
-			});
-	    </script>
 
-		<script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="/latex.css" rel="stylesheet">
+</head>
 
-		//初始化绑定问题文本框答题事件
-		function inputBindEvent(){
-			var questionList = $("#knowledge-point-list").find('input[type="text"]');
-			for(var i=0;i<questionList.length;i++){
-				if(Ding.isEmpty($(questionList[i]).parents('.knowledge_point_question')[0])){
-					$(questionList[i]).on("blur",checkPointAnswer);
-				}
-				else{
-					$(questionList[i]).on("blur",checkQuestionAnswer);
-				}
-			}
-		}
+<body>
+    <div id="knowledge-point-list">
+    </div>
+</body>
 
-		//知识块问题的答案校验
-		function checkPointAnswer(){
-			console.log("checkPointAnswer");
-		}
-
-		//练习题问题的答案校验
-		function checkQuestionAnswer(){
-			var questionDiv = $(this).parents('.knowledge_point_question');
-			var inputList = questionDiv.find('input[type="text"]');
-			var result = true;//是否显示答题结果，true:显示，false:不显示
-			for(var i0;i<inputList.length;i++){
-				if(Ding.isEmpty($(inputList[i]).val())){
-					result = false;
-					break;
-				}
-			}
-
-			if(result){
-				//已全部填写完毕，开始校验答案
-				for(var i=0;i<inputList.length;i++){
-					var contentid = $(inputList[i]).attr("contentid");
-					var code = $(inputList[i]).attr("name");
-					var val = $.trim($(inputList[i]).val());
-					var rightAnswer = contentAnswerMap[contentid+"-"+code];
-					if(rightAnswer==val){
-						$(inputList[i]).css('border','solid 1px green');
-					}
-					else{
-						$(inputList[i]).css('border','solid 1px red');	
-					}
-				}
-				questionDiv.append(nextQuestionDiv);
-			}
-		}
-		
-		var nextContentDiv = '<div class="next_content" onclick="nextContent(this)">继续</div>';
-		var nextQuestionDiv = '<div class="next_content" onclick="nextQuestion(this)">下一题</div>';
-
-
-		//content答案map
-		var contentAnswerMap = {};
-
-		Ding.ready(function(){
-			var sessionId = Ding.getQueryParameterByName("sessionId");
-			var knowledgeId = Ding.getQueryParameterByName("knowledgeId");
-			$.ajax({
-				'url':'/acadamic-web-api/course/chapter/knowledge/info.shtml',
-				'headers':{
-					'xfsw-session':sessionId
-				},
-				'data':{
-					'knowledgeId':knowledgeId
-				},
-				'success':function(res){
-					var data = res.data;
-					console.log(data);
-					var knowledgePointList = data.knowledgePointList;
-
-					for(var i=0;i<knowledgePointList.length;i++){
-						var contentList = knowledgePointList[i].contentList;
-						if(Ding.isEmpty(contentList)){
-							continue;
-						}
-
-						var pointDiv = $('<div class="knowledge_point"></div>');
-						
-						for(var j=0;j<contentList.length;j++){
-							var contentDiv = $('<div class="knowledge_point_content"></div>');
-							var content = contentList[j];
-							switch(content.type){
-								case "EXPLORE":{
-									contentDiv.append(content.content);
-									contentDiv.append(nextContentDiv);
-
-									//整理答案进入答案集合
-									if(!Ding.isEmpty(content.contentAnswerList)){
-										var answer = content.contentAnswerList[i];
-										contentAnswerMap[answer.knowledgePointContentId+"-"+answer.code] = answer.rightAnswer;
-									}
-									break;
-								}
-								case "GAME":{
-									var questionList = contentList[j].questionList;
-									for(var k=0;k<questionList.length;k++){
-										var questionDiv = $('<div class="knowledge_point_question"></div>');
-										questionDiv.append(questionList[k].content);
-										contentDiv.append(questionDiv);
-
-										//整理答案进入答案集合
-										if(!Ding.isEmpty(questionList[k].answerList)){
-											for(var m=0;m<questionList[k].answerList.length;m++){
-												var answer = questionList[k].answerList[m];
-												contentAnswerMap[questionList[k].knowledgePointContentId+"-"+answer.code] = answer.rightAnswer;
-											}
-										}
-									}
-									break;
-								}
-							}
-							
-							pointDiv.append(contentDiv);
-
-							
-						}
-
-						$("#knowledge-point-list").append(pointDiv);
-					}
-
-					$($("#knowledge-point-list>.knowledge_point:first")).show();
-					$($("#knowledge-point-list>.knowledge_point:first>.knowledge_point_content:first")).show();
-
-					console.log(contentAnswerMap);
-				}
-			})
-		});
-
-		function nextContent(content){
-			var currentContent = $(content).parent();
-			currentContent.hide();
-			currentContent.next().show();
-
-			if(currentContent.next().children(".knowledge_point_question").length!=0){
-				currentContent.next().children(".knowledge_point_question:first").show();
-			}			
-		}
-
-		function nextQuestion(question){
-			var currentQuestion = $(question).parents('.knowledge_point_question');
-			currentQuestion.hide();
-			currentQuestion.next().show();
-		}
-		</script>
-		
-	</head>
-	<body>
-		<div id="knowledge-point-list">
-		</div>
-	</body>
 </html>
+
+
+
+<!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_SVG&delayStartupUntil=configured'></script> -->
+<!-- <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.jsTeX-AMS_HTML?config=TeX-AMS_CHTML"></script> -->
+
+
+
+<script type="text/javascript" src="/MathJax/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured"></script>
+<script type="text/javascript">
+MathJax.Hub.Config({ TeX: { extensions: ["forminput.js"] } });
+//  MathJax.Hub.Confige({
+//  	TeX: {
+//     extensions: ["/widgets/mathjax/forminput.js"]
+//   }
+// });
+ MathJax.Hub.Register.StartupHook("End", function () {
+  //绑定题目填空事件
+  inputBindEvent();
+});
+</script>
+
+<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/widgets/dingui/Ding.js"></script>
+<script src="/latex.js"></script>
+
