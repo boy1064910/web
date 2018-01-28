@@ -1,0 +1,94 @@
+<html>
+<head>
+  <meta charset="utf-8">
+<title>MathJax Dynamic Math Test Page</title>
+
+<script src="/widgets/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="http://mini.xueshupa.net/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    },
+    TeX: {
+      extensions: ["http://manager.xueshupa.net/forminput.js"]
+    }
+  });
+
+  MathJax.Hub.Queue(function () {Message("*** MathJax is done ***")});
+  
+  MathJax.Hub.Register.StartupHook("End", function() {
+      console.log(this);
+      //绑定题目填空事件
+      inputBindEvent('MathDiv');
+  });
+</script>
+
+</head>
+<body>
+
+<script>
+  //
+  //  Use a closure to hide the local variables from the
+  //  global namespace
+  //
+  var QUEUE,math,math1;
+  (function () {
+     QUEUE = MathJax.Hub.queue;  // shorthand for the queue
+     math = null;                // the element jax for the math output.
+
+    //
+    //  Get the element jax when MathJax has produced it.
+    //
+    QUEUE.Push(function () {
+      math = MathJax.Hub.getAllJax("MathOutput")[0];
+       math1 = MathJax.Hub.getAllJax("MathDiv")[0];
+    });
+
+    //
+    //  The onchange event handler that typesets the
+    //  math entered by the user
+    //
+    window.UpdateMath = function (TeX) {
+      QUEUE.Push(["Text",math,"\\displaystyle{"+TeX+"}"]);
+    }
+
+    
+  })();
+  function ss(){
+    var TEX = "{\\lim_{x\\to 0}} f(x) = \\FormInput[3][a][c]{baa}";
+    QUEUE.Push(["Text",math1,"\\displaystyle{"+TEX+"}"]);
+  }
+  function inputBindEvent(){
+    var questionList = $(document).find('input[type="text"],[type="number"]');
+    for (var i = 0; i < questionList.length; i++) {
+        $(questionList[i]).on("blur", checkQuestionAnswer);
+    }
+  }
+
+  function checkQuestionAnswer(){
+    alert("woyaojianchadaan ");
+  }
+
+
+  window.Message = function (message) {
+    console.log(message);
+  }
+</script>
+<p>用数学符号来表示，可以表示为\[{\lim_{x\to 0}} f(x) = \FormInput[3][a][c]{baa}\]</p>
+Type some TeX code:
+<input id="MathInput" size="50" onchange="UpdateMath(this.value)" />
+<p>
+
+<div id="MathOutput">
+You typed: ${}$
+</div>
+
+<div id="MathDiv">
+  The answer you provided is: ${}$.
+</div>
+
+<button type="button" onclick="ss()">测试</button>
+
+</body>
+</html>
