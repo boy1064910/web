@@ -17,7 +17,6 @@ MathJax.Callback.Queue(
             //  Implements \href{url}{math}
             //
             HREF_attribute: function(name) {
-              console.log("name");
                 var url = this.GetArgument(name),
                     arg = this.GetArgumentMML(name);
                 this.Push(arg.With({ href: url }));
@@ -34,7 +33,6 @@ MathJax.Callback.Queue(
                 input.setAttribute("contentid", contentid);
                 // input.setAttribute("xmlns","http://www.w3.org/1999/xhtml");
                 var mml = MML["annotation-xml"](MML.xml(input)).With({ encoding: "application/xhtml+xml", isToken: true });
-                console.log(this);
                 this.Push(MML.semantics(mml));
 
             }
